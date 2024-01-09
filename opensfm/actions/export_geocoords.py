@@ -94,9 +94,8 @@ def _write_transformation(transformation: np.ndarray, filename: str) -> None:
 def _transform(point: Sequence, reference: TopocentricConverter, projection: pyproj.Proj) -> List[float]:
     """Transform on point from local coords to a proj4 projection."""
     lat, lon, altitude = reference.to_lla(point[0], point[1], point[2])
-    easting, northing = projection(lon, lat)
-    return [easting, northing, altitude]
-
+    lla = pyproj.Proj(proj='latlong', ellps='WGS84', datum='WGS84')
+    return pyproj.transform(lla, projection, lon, lat, altitude, radians=False)
 
 def _transform_image_positions(
     reconstructions: List[types.Reconstruction], transformation: np.ndarray, output: str
