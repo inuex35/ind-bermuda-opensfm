@@ -381,6 +381,11 @@ class DataSet(DataSetBase):
     def save_matches(self, image: str, matches: Dict[str, np.ndarray]) -> None:
         self.io_handler.mkdir_p(self._matches_path())
 
+        if self.matches_exists(image):
+            existing_matches = self.load_matches(image)
+            # NOTE: Will overwrite new matches if it existed in dictionary, this shouldnt happen.
+            matches.update(existing_matches)
+            
         with BytesIO() as buffer:
             with gzip.GzipFile(fileobj=buffer, mode="w") as fzip:
                 pickle.dump(matches, fzip)
