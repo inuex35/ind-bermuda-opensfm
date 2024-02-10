@@ -834,7 +834,7 @@ def match_lightglue(
         not hasattr(match_lightglue, "lightglue")
         or match_lightglue.feature_type != feature_type.lower()
     ):
-        if feature_type.lower() not in ("disk", "superpoint"):
+        if feature_type.lower() not in ("disk", "superpoint", "aliked"):
             raise RuntimeError(
                 f"LightGlue: Unsupported feature type {feature_type}. LightGlue only supports DISK and SUPERPOINT"
             )
