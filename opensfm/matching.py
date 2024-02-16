@@ -846,6 +846,7 @@ def match_lightglue(
         # match_lightglue.local.lightglue = torch.compile(
         #     match_lightglue.local.lightglue
         # )
+        match_lightglue.compile(mode='reduce-overhead')
         match_lightglue.feature_type = feature_type
         logger.debug("LightGlue initialized")
 
