@@ -62,8 +62,8 @@ RUN git clone --recurse-submodules https://github.com/Shiaoming/ALIKED.git
 RUN cd ALIKED && pip install -r requirements.txt
 RUN cd ALIKED/custom_ops && python3 setup.py build_ext --inplace && python3 setup.py install
 
-RUN git clone --recursive https://github.com/inuex35/ind-bermuda-opensfm.git /source/OpenSfM && \
-    cd /source/OpenSfM && \
+RUN git clone --recursive https://github.com/inuex35/ind-bermuda-opensfm.git /OpenSfM && \
+    cd /OpenSfM && \
     sed -i 's/\r$//' bin/* && \
     sed -i 's/\r$//' viewer/node_modules.sh && \
     pip3 install jupyterlab pyproj && \
@@ -71,16 +71,4 @@ RUN git clone --recursive https://github.com/inuex35/ind-bermuda-opensfm.git /so
     python3 setup.py build && \
     bash viewer/node_modules.sh
 ENV PYTHONPATH=/ALIKED:$PYTHONPATH
-
-RUN useradd -ms /bin/bash ubuntu && \
-    echo 'ubuntu:ubuntu' | chpasswd
-
-RUN chown -R ubuntu:ubuntu /source/OpenSfM
-
-WORKDIR /source/OpenSfM
-
-USER ubuntu
-RUN python3 setup.py build
-RUN bash viewer/node_modules.sh
-ENV PATH="${PATH}:/home/ubuntu/.local/bin"
-ENV PYTHONPATH=/app/ALIKED:$PYTHONPATH
+CMD ["bash"]
