@@ -70,6 +70,7 @@ RUN git clone --recursive https://github.com/inuex35/ind-bermuda-opensfm.git /so
     pip3 install cloudpickle==0.4.0 exifread==2.1.2 flask==2.3.2 fpdf2==2.4.6 joblib matplotlib networkx==2.5  numpy Pillow>=8.1.1 pytest==3.0.7 python-dateutil>=2.7 pyyaml scipy Sphinx==4.2.0 six xmltodict==0.10.2 wheel  opencv-python && \
     python3 setup.py build && \
     bash viewer/node_modules.sh
+RUN pip3 install numpy scipy -U
 ENV PYTHONPATH=/ALIKED:$PYTHONPATH
 
 RUN useradd -ms /bin/bash ubuntu && \
