@@ -22,14 +22,13 @@ OpenSfM is BSD-style licensed, as found in the LICENSE file.  See also the Faceb
 [Privacy Policy]: https://opensource.facebook.com/legal/privacy (Facebook Open Source - Privacy Policy)
 
 ## For 360 gaussian splatting
-In sample folder, config.yaml and 
+In sample folder, there are config.yaml and camera_models_overrides.json.
 The difference from the original repository is this repository can use GPU acceralated feature and matching(feature: SUPERPOINT, DISK, ALIKED, matcher: LIGHTGLUE)
 
-Sample file  for 360 degree camera can be found here.
+Sample data for 360 degree camera can be found here.
 
-[360 camera sample][]
+[360 camera data][]
 
-Look at sample dir for the detailed config.
 Start reconstruction with this command. 
 
 ```bash
@@ -44,6 +43,6 @@ python3 viewer/server.py -d data/your_data_dir
 
 ![image](https://github.com/inuex35/ind-bermuda-opensfm/assets/129066540/cc3677ca-9c73-4725-b706-2cf6cb28f07a)
 
-You will use reconstruction.json and images for 360 gaussian splatting.
+You can use reconstruction.json and images for 360 gaussian splatting.
 
 [360 camera sample]: https://www.dropbox.com/sh/3vabbmrhqqbagp5/AABi14O2tWMbxAX91jaaQY77a?dl=0 (Dropbox)
