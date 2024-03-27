@@ -45,4 +45,4 @@ python3 viewer/server.py -d data/your_data_dir
 
 You can use reconstruction.json and images for 360 gaussian splatting.
 
-[360 camera sample]: https://www.dropbox.com/sh/3vabbmrhqqbagp5/AABi14O2tWMbxAX91jaaQY77a?dl=0 (Dropbox)
+[360 camera data]: https://www.dropbox.com/sh/3vabbmrhqqbagp5/AABi14O2tWMbxAX91jaaQY77a?dl=0 (Dropbox)
