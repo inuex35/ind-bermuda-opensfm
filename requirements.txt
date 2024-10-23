@@ -7,7 +7,7 @@ matplotlib
 networkx==2.5
 numpy>=1.19
 Pillow>=8.1.1
-pyproj>=3.6.1
+pyproj
 pytest==3.0.7
 python-dateutil>=2.7
 pyyaml==5.4.1
