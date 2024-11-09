@@ -1411,9 +1411,7 @@ def grow_reconstruction(
             data.save_reconstruction(
                 [reconstruction],
                 "reconstruction.json"
-                ),
             )
-
         candidates = reconstructed_points_for_images(
             tracks_manager, reconstruction, images
         )
