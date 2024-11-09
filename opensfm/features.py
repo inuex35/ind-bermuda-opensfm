@@ -577,25 +577,45 @@ def extract_features_popsift(
 def extract_features_aliked(
         image: np.ndarray, config: Dict[str, Any], features_count: int
 ) -> Tuple[np.ndarray, np.ndarray]:
+    from lightglue import ALIKED
+    from lightglue.utils import numpy_image_to_torch
     import torch
-    from nets.aliked import ALIKED
-
+    # Check if ALIKED model is already initialized
     if not hasattr(extract_features_aliked, "aliked"):
+        # Log initialization
         logger.debug("Initializing ALIKED...")
         if not torch.cuda.is_available():
             logger.error("ALIKED requires CUDA")
-            raise RuntimeError("SuperPoint requires CUDA")
-        extract_features_aliked.aliked = ALIKED("aliked-n16rot", n_limit = features_count)
-        logger.debug("Compilling ALIKED...")
-        extract_features_aliked.aliked = torch.compile(extract_features_aliked.aliked, mode="reduce-overhead")
-        logger.debug("Initialized ALIKED.")
+            raise RuntimeError("ALIKED requires CUDA")
+        
+        # Initialize ALIKED model with the specified configuration
+        extract_features_aliked.aliked_detector = ALIKED(
+            model_name="aliked-n16rot",
+            max_num_keypoints=features_count,
+            detection_threshold=config.get("detection_threshold", 0.2),
+            nms_radius=config.get("nms_radius", 2)
+        ).to("cuda")
+        
+        logger.debug("ALIKED model initialized.")
+    img_tensor = numpy_image_to_torch(image).unsqueeze(0).cuda()
+    
+    # Prepare input data in dictionary format
+    input_data = {"image": img_tensor}
 
-    logger.debug("Computing ALIKED")
-    t = time.time()
-    pred_ref =  extract_features_aliked.aliked.run(image)
-    points = pred_ref['keypoints']
-    desc = pred_ref['descriptors']
-    logger.debug("Found {0} points in {1}s".format(len(points), time.time() - t))
+    # Run feature extraction
+    logger.debug("Computing ALIKED features...")
+    t_start = time.time()
+    
+    # Use forward method for feature extraction
+    with torch.no_grad():
+        pred_ref = extract_features_aliked.aliked_detector.forward(input_data)
+    
+    # Extract keypoints and descriptors from prediction
+    points = pred_ref["keypoints"][0].cpu().numpy()
+    desc = pred_ref["descriptors"][0].cpu().numpy()
+    
+    # Log results
+    logger.debug("Found {0} points in {1:.2f}s".format(len(points), time.time() - t_start))
     return points, desc
 
 
