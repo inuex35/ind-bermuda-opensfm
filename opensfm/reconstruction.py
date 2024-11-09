@@ -1410,8 +1410,7 @@ def grow_reconstruction(
             paint_reconstruction(data, tracks_manager, reconstruction)
             data.save_reconstruction(
                 [reconstruction],
-                "reconstruction.{}.json".format(
-                    datetime.datetime.now().isoformat().replace(":", "_")
+                "reconstruction.json"
                 ),
             )
 
