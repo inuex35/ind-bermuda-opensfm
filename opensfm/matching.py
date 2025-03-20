@@ -14,9 +14,11 @@ from opensfm import (
     pygeometry,
 )
 from opensfm.dataset_base import DataSetBase
-
+import threading
 logger: logging.Logger = logging.getLogger(__name__)
 
+matching_progress_counter = 0
+matching_progress_lock = threading.Lock()
 
 def clear_cache() -> None:
     feature_loader.instance.clear_cache()
@@ -96,6 +98,8 @@ def match_images_with_pairs(
     poses: Optional[Dict[str, pygeometry.Pose]] = None,
 ) -> Dict[Tuple[str, str], List[Tuple[int, int]]]:
     """Perform pair matchings given pairs."""
+    global matching_progress_counter
+    matching_progress_counter = 0
     cameras = data.load_camera_models()
     args = list(match_arguments(
         pairs, data, config_override, cameras, exifs, poses))
@@ -220,10 +224,7 @@ def match_unwrap_args(
         Optional[Dict[str, pygeometry.Pose]],
     ]
 ) -> Tuple[str, str, np.ndarray]:
-    """Wrapper for parallel processing of pair matching.
-
-    Compute all pair matchings of a given image and save them.
-    """
+    global matching_progress_counter
     log.setup()
     im1 = args[0]
     im2 = args[1]
@@ -241,8 +242,11 @@ def match_unwrap_args(
     camera1 = cameras[exifs[im1]["camera"]]
     camera2 = cameras[exifs[im2]["camera"]]
     matches = match(im1, im2, camera1, camera2, data, config_override, pose)
-    return im1, im2, matches
 
+    with matching_progress_lock:
+        matching_progress_counter += 1
+
+    return im1, im2, matches
 
 def match_descriptors(
     im1: str,
