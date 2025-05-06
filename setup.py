@@ -4,6 +4,7 @@ import multiprocessing
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 import setuptools
 from sphinx.setup_command import BuildDoc
@@ -17,7 +18,7 @@ def version_str(version):
 
 
 class platform_bdist_wheel(bdist_wheel):
-    """Patched bdist_well to make sure wheels include platform tag."""
+    """Patched bdist_wheel to make sure wheels include platform tag."""
 
     def finalize_options(self):
         bdist_wheel.finalize_options(self)
@@ -56,26 +57,35 @@ def build_c_extension():
         )
 
 
-configure_c_extension()
-build_c_extension()
+try:
+    configure_c_extension()
+    build_c_extension()
+except Exception as e:
+    print(f"Warning: Failed to build C extension: {e}")
+    print("Continuing with setup, but some functionality may be missing")
+
+
+# Read requirements from requirements.txt
+with open("requirements.txt") as f:
+    install_requires = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+
+# Make paths for scripts
+scripts_dir = Path("bin")
+scripts = [str(script) for script in scripts_dir.glob("*") if script.is_file() and not script.name.endswith(".py")]
 
 setuptools.setup(
-    name="opensfm",
+    name="indbermuda-opensfm",
     version=version_str(VERSION),
-    description="A Structure from Motion library",
+    description="A Structure from Motion library with GPU acceleration for 360 Gaussian Splatting",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/mapillary/OpenSfM",
-    project_urls={
-        "Documentation": "https://docs.opensfm.org/",
-    },
-    author="Mapillary",
+    url="https://github.com/inuex35/ind-bermuda-opensfm",
+    author="inuex35",
     license="BSD",
     packages=setuptools.find_packages(),
-    scripts=[
-        "bin/opensfm_run_all",
-        "bin/opensfm",
-    ],
+    scripts=scripts,
+    install_requires=install_requires,
+    python_requires=">=3.7",
     package_data={
         "opensfm": [
             "pybundle.*",
@@ -93,6 +103,8 @@ setuptools.setup(
             "data/bow/bow_hahog_root_uchar_64.npz",
         ]
     },
+    include_package_data=True,
+    zip_safe=False,
     cmdclass={
         "bdist_wheel": platform_bdist_wheel,
         "build_doc": BuildDoc,
@@ -106,4 +118,20 @@ setuptools.setup(
             "build_dir": ("setup.py", "build/doc"),
         }
     },
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: BSD License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Scientific/Engineering :: Image Processing",
+    ],
 )
