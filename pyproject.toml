@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "sphinx", "build>=0.7.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 88
+target-version = ['py37']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[project]
+name = "indbermuda-opensfm"
+dynamic = ["version"]
+description = "A Structure from Motion library with GPU acceleration for 360 Gaussian Splatting"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "BSD License"}
+authors = [
+    {name = "inuex35"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+
+[project.urls]
+Homepage = "https://github.com/inuex35/ind-bermuda-opensfm"
+"Bug Tracker" = "https://github.com/inuex35/ind-bermuda-opensfm/issues"
